@@ -23,9 +23,9 @@
 ---
 ## 🖼️ 界面预览
 
-| 编辑器 | 作品页 | 书架 | 工具 |
+| 工具 | 书架 | 作品 | 编辑器 |
 |---|---|---|---|
-| ![编辑器](screenshots/01-editor.jpg) | ![作品页](screenshots/02-work.jpg) | ![书架](screenshots/03-shelf.jpg) | ![工具](screenshots/04-tools.jpg) |
+| ![工具](screenshots/01-tools.jpg) | ![书架](screenshots/02-shelf.jpg) | ![作品](screenshots/03-work.jpg) | ![编辑器](screenshots/04-editor.jpg) |
 
 ## 📁 项目结构
 
