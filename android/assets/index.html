@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light" data-lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>XXZZu</title>
+  <link rel="stylesheet" href="style.css?v=151">
+
+</head>
+<body class="boot-hide">
+
+<!-- ============================================================
+     登录页（首次引导页，登录后不再出现）
+     fix38: 初始 hidden，由 core.js 的 init 决定是否显示，避免开屏闪一下
+     ============================================================ -->
+<div id="loginPage" class="login-page hidden">
+  <div class="login-box">
+    <div class="login-brand">
+      <div class="login-logo">Xu</div>
+      <h1 class="login-title">XXZZu</h1>
+      <p class="login-sub" data-i18n="login.sub">可跨设备同步的多工具写作 app</p>
+    </div>
+
+    <div class="login-form">
+      <label class="field">
+        <span class="field-label" data-i18n="login.email">邮箱</span>
+        <input id="loginEmail" class="field-input" type="email" autocomplete="email" placeholder="your@email.com">
+      </label>
+
+      <label class="field">
+        <span class="field-label" data-i18n="login.pwd">密码</span>
+        <span class="field-pwd">
+          <input id="loginPwd" class="field-input" type="password" autocomplete="current-password" maxlength="12" placeholder="6-12 位">
+        </span>
+      </label>
+
+      <button id="loginBtn" class="btn-primary" data-i18n="login.enter">登陆 / 注册</button>
+
+      <div class="login-links">
+        <label class="check-line">
+          <input id="loginRemember" type="checkbox" class="check-box">
+          <span data-i18n="login.remember">记住密码</span>
+        </label>
+        <button id="loginLocalBtn" class="link-btn" data-i18n="login.local">仅使用本地功能，先不登录</button>
+        <button id="loginForgotBtn" class="link-btn" data-i18n="login.forgot">忘记密码</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     主应用
+     ============================================================ -->
+<div id="app" class="app hidden">
+
+  <!-- ---------- 书架页 ---------- -->
+  <section id="pageShelf" class="page page-shelf" data-tab="shelf">
+    <header class="topbar">
+      <h1 class="topbar-title">XXZZu</h1>
+      <button id="shelfSyncBtn" class="icon-btn" aria-label="sync">
+        <svg viewBox="0 0 24 24" class="ico"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>
+      </button>
+    </header>
+    <div class="page-body">
+      <div id="shelfList" class="list"></div>
+      <div id="shelfEmpty" class="empty" data-i18n="shelf.empty">还没有作品，点右下角新建</div>
+    </div>
+    <button id="shelfAddBtn" class="fab" aria-label="add">
+      <svg viewBox="0 0 24 24" class="ico"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+  </section>
+
+  <!-- ---------- 设置页（tab，内容由原 subSettings 内联而来，ID 全部保持不变） ---------- -->
+  <section id="pageSet" class="page page-set" data-tab="set">
+    <header class="topbar">
+      <h1 class="topbar-title" data-i18n="me.settings">设置</h1>
+    </header>
+    <div class="page-body">
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title" data-i18n="set.display">界面与显示</span>
+        </div>
+        <div class="card-body">
+          <div class="row-seg">
+            <span data-i18n="set.theme">主题</span>
+            <div class="seg" id="segTheme">
+              <button class="seg-item" data-val="light" data-i18n="set.themeLight">日间</button>
+              <button class="seg-item" data-val="dark" data-i18n="set.themeDark">夜间</button>
+            </div>
+          </div>
+          <div class="row-seg">
+            <span data-i18n="set.skin">皮肤</span>
+            <div class="seg" id="segSkin">
+              <button class="seg-item" data-val="normal" data-i18n="set.skinNormal">素雅</button>
+              <button class="seg-item" data-val="glass" data-i18n="set.skinGlass">磨砂A</button>
+              <button class="seg-item" data-val="glassb" data-i18n="set.skinGlassB">磨砂B</button>
+            </div>
+          </div>
+          <div class="row-seg">
+            <span data-i18n="set.lang">语言</span>
+            <div class="seg" id="segLang">
+              <button class="seg-item" data-val="zh-CN">简体</button>
+              <button class="seg-item" data-val="zh-TW">繁體</button>
+              <button class="seg-item" data-val="en">En</button>
+            </div>
+          </div>
+          <div class="row-seg">
+            <span data-i18n="set.font">字体</span>
+            <div class="seg" id="segFont">
+              <button class="seg-item" data-val="system" data-i18n="set.font.system">跟随系统</button>
+              <button class="seg-item" data-val="hei" data-i18n="set.font.hei">黑体</button>
+              <button class="seg-item" data-val="song" data-i18n="set.font.song">宋体</button>
+            </div>
+          </div>
+          <div class="row-seg">
+            <span data-i18n="set.fontSize">字号</span>
+            <div class="seg" id="segSize">
+              <button class="seg-item" data-val="xs">特小</button>
+              <button class="seg-item" data-val="s">小</button>
+              <button class="seg-item" data-val="m">中</button>
+              <button class="seg-item" data-val="l">大</button>
+              <button class="seg-item" data-val="xl">特大</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">API KEY</span>
+        </div>
+        <div class="card-body">
+          <div class="row-seg">
+            <span data-i18n="set.vendor">默认厂商</span>
+            <b class="static-val">Deepseek</b>
+          </div>
+          <div class="row-seg">
+            <span data-i18n="set.model">模型</span>
+            <div class="seg" id="segModel">
+              <button class="seg-item" data-val="flash">flash</button>
+              <button class="seg-item" data-val="v41pro">v4.1 pro</button>
+            </div>
+          </div>
+          <div class="field">
+            <input id="apiKeyInput" class="field-input" type="text" placeholder="填入 Deepseek API Key">
+          </div>
+          <p class="hint" data-i18n="set.keyHint">不填 Key 就无法使用 AI 小工具（起名 / 人设 / 大纲等）</p>
+          <div class="row-btn-line key-ops">
+            <button id="apiKeySave" class="row-btn" data-i18n="set.save">保存</button>
+            <button id="apiKeyEdit" class="row-btn hidden" data-i18n="set.edit">修改</button>
+            <button id="apiKeyClear" class="row-btn row-danger" data-i18n="set.clear">清除</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title" data-i18n="set.export">导出位置</span>
+        </div>
+        <div class="card-body">
+          <div class="row-seg">
+            <span data-i18n="set.exportPath">当前路径</span>
+          </div>
+          <div class="export-path" id="exportPathView">—</div>
+          <p class="hint" data-i18n="set.exportHint">导出的 txt / docx 会保存到该目录；点下方按钮可切换位置。</p>
+          <div class="row-btn-line">
+            <button id="exportPathChange" class="row-btn" data-i18n="set.exportChange">更换导出位置</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="ver-line" id="aboutEntry">XXZZu · <span data-i18n="common.localOnly">本地写作</span></div>
+    </div>
+  </section>
+
+  <!-- ---------- 工具页 ---------- -->
+  <section id="pageTools" class="page page-tools" data-tab="tools">
+    <header class="topbar">
+      <h1 class="topbar-title" data-i18n="tab.tools">工具</h1>
+    </header>
+    <div class="page-body">
+      <div class="group-label" data-i18n="tools.localGroup">本地工具</div>
+      <div class="tool-grid" id="toolsLocal"></div>
+      <div class="group-label" data-i18n="tools.aiGroup">AI 工具</div>
+      <div class="tool-grid" id="toolsAi"></div>
+    </div>
+  </section>
+
+  <!-- ---------- 底部 tab ---------- -->
+  <nav id="tabbar" class="tabbar">
+    <button class="tab-item" data-tab="tools">
+      <svg viewBox="0 0 24 24" class="ico"><path d="M14 6l4 4-8 8H6v-4z"/><path d="M4 21h16"/></svg>
+      <span data-i18n="tab.tools">工具</span>
+    </button>
+    <button class="tab-item" data-tab="shelf">
+      <svg viewBox="0 0 24 24" class="ico"><path d="M4 5h5v15H4zM10 5h5v15h-5zM17 6l3 14"/></svg>
+      <span data-i18n="tab.shelf">书架</span>
+    </button>
+    <button class="tab-item" data-tab="set">
+      <svg viewBox="0 0 24 24" class="ico"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>
+      <span data-i18n="me.settings">设置</span>
+    </button>
+  </nav>
+</div>
+
+<!-- 【返修4批e】原 subSettings 二级页已内联为「设置」tab（#pageSet），此处移除 -->
+
+<!-- ============================================================
+     二级页：创建作品（第 3 批接真实数据）
+     ============================================================ -->
+<section id="subWork" class="subpage hidden">
+  <header class="topbar">
+    <button id="workBack" class="icon-btn" aria-label="back">
+      <svg viewBox="0 0 24 24" class="ico"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <h1 class="topbar-title" id="workTopTitle">作品</h1>
+    <button id="workDelBtn" class="icon-btn danger" aria-label="delete">
+      <svg viewBox="0 0 24 24" class="ico"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/><path d="M10 11v6M14 11v6"/></svg>
+    </button>
+  </header>
+  <div class="page-body">
+    <div class="card wi-card">
+      <div class="card-body wi-view">
+        <div class="wi-top">
+          <div class="wi-avatar" id="wiAvatarView"></div>
+          <div class="wi-meta">
+            <div class="wi-title" id="wiTitleView"></div>
+            <div class="wi-author" id="wiAuthorView"></div>
+          </div>
+        </div>
+        <div class="wi-intro" id="wiIntroView"></div>
+        <div class="wi-foot">
+          <button id="wiEditBtn" class="mini-btn" data-i18n="work.editInfo">修改信息</button>
+        </div>
+      </div>
+      <div class="card-body wi-edit hidden" id="wiEditBox">
+        <div class="field">
+          <span class="field-label" data-i18n="create.name">作品名</span>
+          <input id="wiTitle" class="field-input">
+        </div>
+        <div class="field">
+          <span class="field-label" data-i18n="create.author">作者</span>
+          <input id="wiAuthor" class="field-input">
+        </div>
+        <div class="field">
+          <span class="field-label" data-i18n="create.intro">简介（可不填）</span>
+          <textarea id="wiIntro" class="field-input field-textarea" rows="3"></textarea>
+        </div>
+        <div class="wi-foot">
+          <button id="wiCancelBtn" class="mini-btn ghost" data-i18n="common.cancel">取消</button>
+          <button id="wiSaveBtn" class="mini-btn" data-i18n="common.save">保存</button>
+        </div>
+      </div>
+    </div>
+    <div class="card set-entry-card">
+      <div class="card-body">
+        <div class="sec-head sec-head-inline">
+          <span data-i18n="set.title">作品设定</span>
+        </div>
+        <div class="set-entry-row">
+          <button class="set-entry-btn" id="setGoPersona" data-i18n="set.persona">人设</button>
+          <button class="set-entry-btn" id="setGoWorld" data-i18n="set.worldview">世界观</button>
+          <button class="set-entry-btn" id="setGoOther" data-i18n="set.other">其他设定</button>
+        </div>
+      </div>
+    </div>
+    <div class="sec-head">
+      <span data-i18n="work.chapters">章节</span>
+      <button id="chAddBtn" class="mini-btn" data-i18n="write.newChapter">新建章节</button>
+    </div>
+    <div id="workChList" class="list"></div>
+    <div id="workChEmpty" class="empty-sm" data-i18n="work.noChapter">还没有章节，点上方新建</div>
+  </div>
+</section>
+
+<section id="subCreate" class="subpage hidden">
+  <header class="topbar">
+    <button id="createBack" class="icon-btn" aria-label="back">
+      <svg viewBox="0 0 24 24" class="ico"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <h1 class="topbar-title" data-i18n="create.title">新建作品</h1>
+    <span class="icon-btn ghost"></span>
+  </header>
+  <div class="page-body">
+    <div class="card">
+      <div class="card-body">
+        <div class="field">
+          <span class="field-label" data-i18n="create.name">作品名</span>
+          <input id="createTitle" class="field-input" placeholder="例如：长夜将明">
+        </div>
+        <div class="field">
+          <span class="field-label" data-i18n="create.author">作者</span>
+          <input id="createAuthor" class="field-input" placeholder="笔名">
+        </div>
+        <div class="field">
+          <span class="field-label" data-i18n="create.intro">简介（可不填）</span>
+          <textarea id="createIntro" class="field-input field-textarea" rows="3" placeholder="一句话简介"></textarea>
+        </div>
+        <button id="createConfirm" class="btn-primary create-btn" data-i18n="create.confirm">创建</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     二级页：写作页（骨架，第三批填充）
+     ============================================================ -->
+<section id="subWrite" class="subpage hidden">
+  <header class="topbar">
+    <button id="writeBack" class="icon-btn" aria-label="back">
+      <svg viewBox="0 0 24 24" class="ico"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <button id="writeWorkName" class="work-name-btn">未命名作品</button>
+    <button id="writeMenu" class="icon-btn" aria-label="menu">
+      <svg viewBox="0 0 24 24" class="ico"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>
+    </button>
+  </header>
+  <div class="write-body">
+    <div id="writeToc" class="toc-panel hidden">
+      <div class="toc-head">
+        <span data-i18n="write.chapters">章节</span>
+      </div>
+      <div id="tocList" class="toc-list"></div>
+      <button id="tocAddBtn" class="toc-add" data-i18n="write.newChapter">+ 新建章节</button>
+    </div>
+    <div class="write-main">
+      <input id="chapterTitle" class="chapter-title" placeholder="章节标题">
+      <div id="editor" class="editor" contenteditable="true"></div>
+      <div id="menuPop" class="menu-pop hidden">
+        <div class="menu-item" data-act="newchapter">新建章节</div>
+        <div class="menu-item" data-act="rename">重命名作品</div>
+        <div class="menu-item" data-act="toc">章节目录</div>
+      </div>
+    </div>
+  </div>
+  <div class="write-status">
+    <span id="wordCount">0</span> <span data-i18n="write.words">字</span>
+    <span class="dot">·</span>
+    <span id="saveState" data-i18n="write.saved">已保存</span>
+  </div>
+  <div class="wfont-bar hidden" id="wfontBar">
+    <button class="wfont-item" data-fs="xs"></button>
+    <button class="wfont-item" data-fs="s"></button>
+    <button class="wfont-item" data-fs="m"></button>
+    <button class="wfont-item" data-fs="l"></button>
+    <button class="wfont-item" data-fs="xl"></button>
+  </div>
+  <div class="write-tools">
+    <button id="wtFont" class="wt-btn" data-i18n="write.fontSize">字号</button>
+    <button id="wtBold" class="wt-btn"><b>B</b></button>
+    <button id="wtItalic" class="wt-btn"><i>I</i></button>
+    <button id="wtSave" class="wt-btn" data-i18n="write.save">保存</button>
+  </div>
+</section>
+
+<!-- ============================================================
+     二级页：写作统计（4批e-fix22 新增）
+     ============================================================ -->
+<section id="subStats" class="subpage hidden">
+  <header class="topbar">
+    <button id="statsBack" class="icon-btn" aria-label="back">
+      <svg viewBox="0 0 24 24" class="ico"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <h1 class="topbar-title" data-i18n="stats.title">写作统计</h1>
+    <span class="icon-btn ghost"></span>
+  </header>
+  <div class="page-body">
+    <!-- 时间维度切换条 -->
+    <div class="stats-seg" id="statsSeg">
+      <button class="stats-seg-item active" data-range="today" data-i18n="stats.today">今天</button>
+      <button class="stats-seg-item" data-range="yesterday" data-i18n="stats.yesterday">昨天</button>
+      <button class="stats-seg-item" data-range="d7" data-i18n="stats.d7">近7天</button>
+      <button class="stats-seg-item" data-range="d30" data-i18n="stats.d30">近30天</button>
+      <button class="stats-seg-item" data-range="month" data-i18n="stats.month">本月</button>
+      <button class="stats-seg-item" data-range="lastMonth" data-i18n="stats.lastMonth">上月</button>
+    </div>
+    <!-- 大字数值 -->
+    <div class="card stats-hero">
+      <div class="stats-hero-label" id="statsRangeLabel" data-i18n="stats.today">今天</div>
+      <div class="stats-hero-num"><span id="statsTotal">0</span><span class="stats-hero-unit" data-i18n="write.words">字</span></div>
+    </div>
+    <!-- 折线图 -->
+    <div class="card stats-chart-card">
+      <div class="stats-chart-head">
+        <span data-i18n="stats.trend">近 7 天趋势</span>
+      </div>
+      <div id="statsChart" class="stats-chart"></div>
+    </div>
+    <!-- 作品维度 -->
+    <div class="sec-head">
+      <span data-i18n="stats.byWork">作品统计</span>
+    </div>
+    <div class="stats-work-switch" id="statsWorkSwitch"></div>
+    <div class="card stats-work-card">
+      <div class="wi-title" id="statsWorkTitle"></div>
+      <div class="stats-work-row">
+        <div class="stats-kv"><div class="stats-kv-num" id="statsWorkCh">0</div><div class="stats-kv-label" data-i18n="stats.chapters">总章节</div></div>
+        <div class="stats-kv"><div class="stats-kv-num" id="statsWorkWords">0</div><div class="stats-kv-label" data-i18n="stats.words">总字数</div></div>
+      </div>
+    </div>
+    <div id="statsEmpty" class="empty-sm hidden" data-i18n="stats.empty">还没有作品，先去书架创建一部吧。</div>
+  </div>
+  </section>
+
+  <!-- ============================================================
+       二级页：AI 工具（4批e-fix23 新增）
+       - 纯本地调用，Key 存本机；无 Key 时入口置灰
+       - 4 个工具共用此页：智能起名 / 人设生成 / 灵感大纲 / 设定整理
+       ============================================================ -->
+  <section id="subAi" class="subpage hidden">
+    <header class="topbar">
+      <button id="aiBack" class="icon-btn" aria-label="back">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+      <h1 class="topbar-title" id="aiTitle">AI 工具</h1>
+      <span class="topbar-right"></span>
+    </header>
+    <div class="page-body ai-page">
+      <!-- 当前工具徽章卡 -->
+      <div class="ai-hero">
+        <div class="ai-hero-ic" id="aiHeroIc"></div>
+        <div class="ai-hero-tx">
+          <div class="ai-hero-name" id="aiHeroName">AI 工具</div>
+          <div class="ai-hero-sub" id="aiHeroSub" data-i18n="ai.heroSub">描述你的需求，一键生成灵感</div>
+        </div>
+      </div>
+
+      <!-- 输入卡 -->
+      <div class="ai-card">
+        <div class="ai-card-head">
+          <span class="ai-card-ic">
+            <svg class="ico" viewBox="0 0 24 24"><path d="M4 7h16M4 12h10M4 17h7"/></svg>
+          </span>
+          <label class="ai-label" id="aiInputLabel" data-i18n="ai.inputLabel">补充要求（可选）</label>
+        </div>
+        <textarea id="aiInput" class="ai-textarea" rows="4" data-i18n-ph="ai.inputPh" placeholder="例如：主角是剑修，性格冷淡，背景是东方玄幻"></textarea>
+      </div>
+
+      <!-- 生成按钮 -->
+      <button id="aiGen" class="ai-gen-btn">
+        <span class="ai-gen-ic">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/></svg>
+        </span>
+        <span class="ai-gen-txt" data-i18n="ai.generate">开始生成</span>
+        <span class="ai-gen-loading hidden" aria-hidden="true">
+          <i></i><i></i><i></i>
+        </span>
+      </button>
+
+      <div id="aiStatus" class="ai-status hidden"></div>
+
+      <!-- 结果卡 -->
+      <div id="aiResultWrap" class="ai-result-wrap hidden">
+        <div class="ai-result-head">
+          <span class="ai-result-title">
+            <span class="ai-dot"></span>
+            <span data-i18n="ai.result">生成结果</span>
+          </span>
+          <div class="ai-result-ops">
+            <button id="aiCopy" class="ai-mini-btn" data-i18n="ai.copy">复制</button>
+            <button id="aiAppend" class="ai-mini-btn hidden" data-i18n="ai.append">写入设定</button>
+          </div>
+        </div>
+        <div id="aiResult" class="ai-result"></div>
+      </div>
+
+      <!-- 底部提示 -->
+      <div class="ai-tip">
+        <span class="ai-tip-ic">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M12 8v5"/><circle cx="12" cy="16.5" r=".6"/><circle cx="12" cy="12" r="9"/></svg>
+        </span>
+        <span data-i18n="ai.tip">内容由 AI 生成，仅供参考，请自行核实与润色。</span>
+      </div>
+    </div>
+  </section>
+
+<!-- ============================================================
+     作品设定：入口列表页（人设 / 世界观 / 其他）
+     ============================================================ -->
+<section id="subSetting" class="subpage hidden">
+  <header class="topbar">
+    <button id="setBack" class="icon-btn" aria-label="back">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <h1 class="topbar-title" id="setTopTitle" data-i18n="set.title">作品设定</h1>
+    <span class="topbar-right"></span>
+  </header>
+  <div class="page-body">
+    <div class="set-tabs">
+      <button class="set-tab active" data-set="persona" data-i18n="set.persona">人设</button>
+      <button class="set-tab" data-set="world" data-i18n="set.worldview">世界观</button>
+      <button class="set-tab" data-set="other" data-i18n="set.other">其他设定</button>
+    </div>
+    <div id="setPanePersona" class="set-pane">
+      <button id="personaAdd" class="btn-primary set-add-btn" data-i18n="set.newPersona">+ 新建人设卡</button>
+      <div id="personaList" class="set-list"></div>
+      <div id="personaEmpty" class="empty-sm" data-i18n="set.noPersona">还没有人设卡，点上方新建</div>
+    </div>
+    <div id="setPaneWorld" class="set-pane hidden">
+      <div class="field">
+        <span class="field-label" data-i18n="set.newWorld">新建设定</span>
+        <textarea id="setWorldText" class="field-input field-textarea set-textarea" rows="4" placeholder="在这里记录世界观：地理 / 势力 / 力量体系 / 历史 / 种族 / 规则……"></textarea>
+      </div>
+      <button id="setWorldSave" class="btn-primary set-save-btn" data-i18n="common.save">保存</button>
+      <div id="setWorldList" class="set-card-list"></div>
+      <div id="setWorldEmpty" class="empty-sm" data-i18n="set.noSetting">还没有设定，点上方保存新建</div>
+    </div>
+    <div id="setPaneOther" class="set-pane hidden">
+      <div class="field">
+        <span class="field-label" data-i18n="set.newSetting">新建设定</span>
+        <textarea id="setOtherText" class="field-input field-textarea set-textarea" rows="4" placeholder="在这里记录其他设定：时间线 / 势力关系 / 道具 / 名词表……"></textarea>
+      </div>
+      <button id="setOtherSave" class="btn-primary set-save-btn" data-i18n="common.save">保存</button>
+      <div id="setOtherList" class="set-card-list"></div>
+      <div id="setOtherEmpty" class="empty-sm" data-i18n="set.noSetting">还没有设定，点上方保存新建</div>
+    </div>
+  </div>
+</section>
+
+<!-- 人设卡详情：非全屏、带边框的大窗口（内嵌于 subSetting，不新开二级页） -->
+<div id="setCardMask" class="persona-mask"></div>
+<div id="setCardModal" class="persona-modal">
+  <div class="persona-modal-head">
+    <span class="persona-modal-title" id="setCardTitle2" data-i18n="set.cardTitle2">设定</span>
+    <span class="persona-modal-tools">
+      <button id="setCardDel" class="persona-modal-del" data-i18n="common.delete">删除</button>
+      <button id="setCardClose" class="persona-modal-close" data-i18n="set.close">关闭</button>
+    </span>
+  </div>
+  <div class="persona-modal-body" id="setCardBody">
+    <div class="field">
+      <span class="field-label" data-i18n="set.cardText">内容</span>
+      <textarea id="setCardText" class="field-input field-textarea" rows="10"></textarea>
+    </div>
+  </div>
+  <div class="persona-modal-foot">
+    <button id="setCardSave" class="mini-btn set-foot-save" data-i18n="common.save">保存</button>
+  </div>
+</div>
+<div id="personaMask" class="persona-mask"></div>
+<div id="personaModal" class="persona-modal">
+  <div class="persona-modal-head">
+    <span class="persona-modal-title" data-i18n="set.cardTitle">人设卡</span>
+    <span class="persona-modal-tools">
+      <button id="personaDel" class="persona-modal-del" data-i18n="common.delete">删除</button>
+      <button id="personaClose" class="persona-modal-close" data-i18n="set.close">关闭</button>
+    </span>
+  </div>
+  <div class="persona-modal-body">
+    <div class="field"><span class="field-label" data-i18n="set.fName">姓名</span><input id="pFName" class="field-input"></div>
+    <div class="field"><span class="field-label" data-i18n="set.fGender">性别</span><input id="pFGender" class="field-input"></div>
+    <div class="field"><span class="field-label" data-i18n="set.fAge">年龄</span><input id="pFAge" class="field-input"></div>
+    <div class="field"><span class="field-label" data-i18n="set.fRace">种族</span><input id="pFRace" class="field-input"></div>
+    <div class="field"><span class="field-label" data-i18n="set.fIdentity">身份</span><input id="pFIdentity" class="field-input"></div>
+    <div class="field"><span class="field-label" data-i18n="set.fLook">外貌</span><textarea id="pFLook" class="field-input field-textarea" rows="2"></textarea></div>
+    <div class="field"><span class="field-label" data-i18n="set.fBg">背景故事</span><textarea id="pFBg" class="field-input field-textarea" rows="3"></textarea></div>
+    <div class="field"><span class="field-label" data-i18n="set.fRel">与其他角色的关系</span><textarea id="pFRel" class="field-input field-textarea" rows="3"></textarea></div>
+  </div>
+  <div class="persona-modal-foot">
+    <button id="personaSave" class="mini-btn set-foot-save" data-i18n="common.save">保存</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     通用弹窗（自绘选择器 / 操作表）
+     ============================================================ -->
+<div id="popMask" class="pop-mask"></div>
+<div id="popSheet" class="pop-sheet">
+  <div id="popTitle" class="pop-title"></div>
+  <div id="popBody" class="pop-body"></div>
+</div>
+
+<!-- ============================================================
+     关于弹窗（圆框居中）
+     ============================================================ -->
+<div id="aboutMask" class="about-mask"></div>
+<div id="aboutBox" class="about-box">
+  <div class="about-title" data-i18n="set.about">关于</div>
+  <div class="about-body">
+    <div class="row-line"><span data-i18n="set.author">作者</span><b>万千</b></div>
+    <div class="row-line"><span data-i18n="set.mail">邮箱</span><b>wew1sh@126.com</b></div>
+    <div class="about-sub" data-i18n="set.disclaimer">免责声明</div>
+    <div id="disclaimerText" class="disclaimer" data-i18n="set.disclaimerText">
+      本应用仅供个人学习与写作使用，所有内容由用户自行创建与保管。请自行做好备份。
+    </div>
+  </div>
+  <button id="aboutClose" class="about-close" data-i18n="common.ok">确定</button>
+</div>
+
+<script src="lib/marked.min.js"></script>
+  <script src="core.js?v=151"></script>
+
+</body>
+</html>
