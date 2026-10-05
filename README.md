@@ -20,6 +20,13 @@
 
 ---
 
+---
+## 🖼️ 界面预览
+
+| 编辑器 | 作品页 | 书架 | 工具 |
+|---|---|---|---|
+| ![编辑器](screenshots/01-editor.jpg) | ![作品页](screenshots/02-work.jpg) | ![书架](screenshots/03-shelf.jpg) | ![工具](screenshots/04-tools.jpg) |
+
 ## 📁 项目结构
 
 ```
@@ -74,4 +81,6 @@ bash build.sh
 
 ## 📄 许可
 
-个人项目，仅供学习与自用。
+本项目采用 **MIT License** 开源，详见 [LICENSE](LICENSE)。
+
+个人项目，欢迎学习与自用。
